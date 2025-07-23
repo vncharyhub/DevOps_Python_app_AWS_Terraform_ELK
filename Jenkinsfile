@@ -5,9 +5,15 @@ pipeline {
     ECR_REPO = ''
   }
   stages {
-    stage('Checkout') { steps { checkout scm } }
+    stage('Checkout') {
+      steps {
+        checkout scm
+      }
+    }
     stage('SonarQube') {
-      steps { sh 'sonar-scanner -Dsonar.projectKey=DevOpsApp -Dsonar.sources=.' }
+      steps {
+        sh 'sonar-scanner -Dsonar.projectKey=DevOpsApp -Dsonar.sources=.'
+      }
     }
     stage('Build & Push Docker') {
       steps {
@@ -20,15 +26,19 @@ pipeline {
       }
     }
     stage('Terraform Apply') {
-      steps { sh 'terraform -chdir=terraform init && terraform apply -auto-approve' }
+      steps {
+        sh 'terraform -chdir=terraform init && terraform apply -auto-approve'
+      }
     }
     stage('Ansible Configure') {
-      steps { sh 'ansible-playbook -i ansible/inventory.ini ansible/playbook.yml' }
+      steps {
+        sh 'ansible-playbook -i ansible/inventory.ini ansible/playbook.yaml'
+      }
     }
     stage('K8S Deploy') {
       steps {
         withCredentials([file(credentialsId: 'kubeconfig', variable: 'KUBECONFIG')]) {
-          sh 'kubectl apply -f k8s/deployment.yml && kubectl apply -f k8s/service.yml'
+          sh 'kubectl apply -f k8s/deployment.yaml && kubectl apply -f k8s/service.yaml'
         }
       }
     }

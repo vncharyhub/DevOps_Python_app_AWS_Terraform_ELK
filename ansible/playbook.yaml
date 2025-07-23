@@ -1,11 +1,30 @@
 - hosts: all
   become: true
   tasks:
-    - apt: name={{ item }} state=latest update_cache=true
-      loop: [docker.io, apt-transport-https, ca-certificates, curl]
-    - shell: |
+    - name: Install required packages
+      apt:
+        name: "{{ item }}"
+        state: latest
+        update_cache: true
+      loop:
+        - docker.io
+        - apt-transport-https
+        - ca-certificates
+        - curl
+
+    - name: Add Kubernetes APT key and repo
+      shell: |
         curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -
         echo "deb https://apt.kubernetes.io/ kubernetes-xenial main" > /etc/apt/sources.list.d/kubernetes.list
-      args: warn: false
-    - apt: name={{ item }} state=latest
-      loop: [kubelet, kubeadm, kubectl]
+      args:
+        warn: false
+
+    - name: Install Kubernetes packages
+      apt:
+        name: "{{ item }}"
+        state: latest
+        update_cache: true
+      loop: 
+        - kubelet
+        - kubeadm
+        - kubectl
