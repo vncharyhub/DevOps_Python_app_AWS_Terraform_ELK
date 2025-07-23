@@ -30,6 +30,11 @@ pipeline {
         sh 'terraform -chdir=terraform init && terraform apply -auto-approve'
       }
     }
+    stage('Generate Ansible Inventory') {
+      steps {
+        sh './generate_inventory.sh'
+      }
+    }
     stage('Ansible Configure') {
       steps {
         sh 'ansible-playbook -i ansible/inventory.ini ansible/playbook.yaml'

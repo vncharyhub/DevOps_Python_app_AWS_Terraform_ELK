@@ -27,3 +27,8 @@ output "public_subnet_id" {
   description = "The ID of the public subnet"
   value       = aws_subnet.public.id
 }
+
+# list of K8s node public IPs
+output "k8s_node_public_ips" {
+  value = [for instance in aws_instance.k8s_nodes : instance.public_ip]
+}
