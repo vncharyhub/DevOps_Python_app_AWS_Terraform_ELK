@@ -47,7 +47,7 @@ resource "aws_ecr_repository" "app_repo" {
 }
 
 resource "aws_instance" "k8s_nodes" {
-  count         = 2 # or however many K8s nodes you want
+  count         = 2
   ami           = var.ami_id
   instance_type = "t3.medium"
   subnet_id     = aws_subnet.public.id
@@ -58,4 +58,3 @@ resource "aws_instance" "k8s_nodes" {
     Name = "k8s-node-${count.index + 1}"
   }
 }
-
