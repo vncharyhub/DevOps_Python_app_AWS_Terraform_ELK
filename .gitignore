@@ -1,0 +1,26 @@
+# Terraform state files
+terraform.tfstate
+terraform.tfstate.backup
+*.tfstate
+*.tfstate.*
+
+# Crash log files
+crash.log
+
+# Terraform directories
+.terraform/
+.terraform.lock.hcl
+
+# Sensitive variable files (if any)
+*.tfvars
+*.pem
+*.key
+*.crt
+
+# Editor/IDE metadata
+*.swp
+*.swo
+*.log
+.vscode/
+.idea/
+.DS_Store

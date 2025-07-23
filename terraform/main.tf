@@ -46,5 +46,16 @@ resource "aws_ecr_repository" "app_repo" {
   name = "devops-app"
 }
 
-output "ecr_repo_url" { value = aws_ecr_repository.app_repo.repository_url }
-output "jenkins_public_ip" { value = aws_instance.jenkins.public_ip }
+resource "aws_instance" "k8s_nodes" {
+  count         = 2 # or however many K8s nodes you want
+  ami           = var.ami_id
+  instance_type = "t3.medium"
+  subnet_id     = aws_subnet.public.id
+  key_name      = var.key_name
+  vpc_security_group_ids = [aws_security_group.allow_all.id]
+
+  tags = {
+    Name = "k8s-node-${count.index + 1}"
+  }
+}
+
