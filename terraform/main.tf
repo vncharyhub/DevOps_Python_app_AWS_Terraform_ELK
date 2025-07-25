@@ -40,7 +40,7 @@ resource "aws_security_group" "allow_all" {
 
 resource "aws_instance" "jenkins" {
   ami                    = var.ami_id
-  instance_type          = "t3.medium"
+  instance_type          = "t2.medium"
   subnet_id              = aws_subnet.public.id
   vpc_security_group_ids = [aws_security_group.allow_all.id]
   associate_public_ip_address = true
