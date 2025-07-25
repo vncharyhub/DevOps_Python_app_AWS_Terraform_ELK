@@ -4,14 +4,18 @@ provider "aws" {
 
 resource "aws_vpc" "main" {
   cidr_block = "10.0.0.0/16"
-  tags       = { Name = "devops-vpc" }
+  tags = {
+    Name = "devops-vpc"
+  }
 }
 
 resource "aws_subnet" "public" {
   vpc_id            = aws_vpc.main.id
   cidr_block        = "10.0.1.0/24"
   availability_zone = "${var.aws_region}a"
-  tags              = { Name = "public-subnet" }
+  tags = {
+    Name = "public-subnet"
+  }
 }
 
 resource "aws_security_group" "allow_all" {
@@ -39,7 +43,10 @@ resource "aws_instance" "jenkins" {
   instance_type          = "t3.medium"
   subnet_id              = aws_subnet.public.id
   vpc_security_group_ids = [aws_security_group.allow_all.id]
-  tags                   = { Name = "jenkins-server" }
+  associate_public_ip_address = true
+  tags = {
+    Name = "jenkins-server"
+  }
 }
 
 resource "aws_ecr_repository" "app_repo" {
@@ -49,10 +56,11 @@ resource "aws_ecr_repository" "app_repo" {
 resource "aws_instance" "k8s_nodes" {
   count         = 2
   ami           = var.ami_id
-  instance_type = "t3.medium"
+  instance_type = "t2.micro"
   subnet_id     = aws_subnet.public.id
   key_name      = var.key_name
   vpc_security_group_ids = [aws_security_group.allow_all.id]
+  associate_public_ip_address = true
 
   tags = {
     Name = "k8s-node-${count.index + 1}"
