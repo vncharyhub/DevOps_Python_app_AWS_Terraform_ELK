@@ -1,6 +1,6 @@
 import requests
 
-token = "YOUR_GITHUB_TOKEN"
+token = "GITHUB_TOKEN"
 url = "https://api.github.com/repos/vncharyhub/DevOps_Python_app_AWS_Terraform_ELK/issues"
 
 headers = {
